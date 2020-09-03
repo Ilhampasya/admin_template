@@ -3,7 +3,9 @@
 {% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>
+<a href="{% url 'admin:index' %}" class="logo">
+    <img src="https://assets.alagas.net/logo/logo.png" width="75" height="35" alt="Alagas User Control Panel" />
+</a>
 {% endblock %}
 
 {% block nav-global %}{% endblock %}

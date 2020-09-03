@@ -1,103 +1,276 @@
 {% load i18n static %}<!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
-<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %} class="fixed sidebar-left-collapsed">
 <head>
+<meta charset="UTF-8">
 <title>{% block title %}{% endblock %}</title>
 <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
 {% if not is_popup and is_nav_sidebar_enabled %}
-  <link rel="stylesheet" type="text/css" href="{% static "admin/css/nav_sidebar.css" %}">
-  <script src="{% static 'admin/js/nav_sidebar.js' %}" defer></script>
+  {% comment %} <link rel="stylesheet" type="text/css" href="{% static "admin/css/nav_sidebar.css" %}">
+  <script src="{% static 'admin/js/nav_sidebar.js' %}" defer></script> {% endcomment %}
 {% endif %}
 {% block extrastyle %}{% endblock %}
-{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
+{% comment %} {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %} {% endcomment %}
 {% block extrahead %}{% endblock %}
 {% block responsive %}
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}">
-    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
+    {% comment %} <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}">
+    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %} {% endcomment %}
 {% endblock %}
 {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
+
+<!-- Web Fonts  -->
+<link rel="shortcut icon"  href="{% static 'favicon/alagas.ico' %}" type="image/x-icon" />
+<link rel="apple-touch-icon" href="{% static 'favicon/alagas-180x180.png' %}" sizes="180x180" type="image/png" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,600,800,900|Shadows+Into+Light" rel="stylesheet" type="text/css">
+
+<!-- Vendor CSS -->
+<link rel="stylesheet" href="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/bootstrap/css/bootstrap.css" />
+<link rel="stylesheet" href="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/animate/animate.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/magnific-popup/magnific-popup.css" />
+<link rel="stylesheet" href="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" />
+
+<!-- Specific Page Vendor CSS -->
+<link rel="stylesheet" href="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/owl.carousel/assets/owl.carousel.css" />
+<link rel="stylesheet" href="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/owl.carousel/assets/owl.theme.default.css" />
+<link rel="stylesheet" href="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/select2/css/select2.css">
+<link rel="stylesheet" href="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" />
+
+<!-- Theme CSS -->
+<link rel="stylesheet" href="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/css/theme.css" />
+
+<!-- Skin CSS -->
+<link rel="stylesheet" href="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/css/skins/default.css" />
+
+<!-- Theme Custom CSS -->
+{% comment %} <link rel="stylesheet" href="{% static 'css/admin-custom.css' %}" /> {% endcomment %}
+
+<!-- Head Libs -->
+<script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/modernizr/modernizr.js"></script>
+
 </head>
 {% load i18n %}
 
 <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
   data-admin-utc-offset="{% now "Z" %}">
 
-<!-- Container -->
-<div id="container">
+  {% block auth %}{% endblock %}
+
+  {% if has_permission %}
+  <section class="body">
 
     {% if not is_popup %}
-    <!-- Header -->
-    <div id="header">
-        <div id="branding">
+    <!-- start: header -->
+    <header class="header">
+      <div class="logo-container">
         {% block branding %}{% endblock %}
+        <div class="d-md-none toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
+          <i class="fas fa-bars" aria-label="Toggle sidebar"></i>
         </div>
-        {% block usertools %}
-        {% if has_permission %}
-        <div id="user-tools">
-            {% block welcome-msg %}
-                {% translate 'Welcome,' %}
-                <strong>{% firstof user.get_short_name user.get_username %}</strong>.
-            {% endblock %}
-            {% block userlinks %}
-                {% if site_url %}
-                    <a href="{{ site_url }}">{% translate 'View site' %}</a> /
-                {% endif %}
-                {% if user.is_active and user.is_staff %}
-                    {% url 'django-admindocs-docroot' as docsroot %}
-                    {% if docsroot %}
-                        <a href="{{ docsroot }}">{% translate 'Documentation' %}</a> /
-                    {% endif %}
-                {% endif %}
-                {% if user.has_usable_password %}
-                <a href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a> /
-                {% endif %}
-                <a href="{% url 'admin:logout' %}">{% translate 'Log out' %}</a>
-            {% endblock %}
-        </div>
+      </div>
+
+      {% block usertools %}
+      <!-- start: search & user box -->
+      <div class="header-right">
+
+        {% if site_url %}
+            <a href="{{ site_url }}">{% translate 'View site' %}</a>
         {% endif %}
-        {% endblock %}
-        {% block nav-global %}{% endblock %}
-    </div>
-    <!-- END Header -->
-    {% block breadcrumbs %}
-    <div class="breadcrumbs">
-    <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
-    {% if title %} &rsaquo; {{ title }}{% endif %}
-    </div>
-    {% endblock %}
+
+        <span class="separator"></span>
+
+        <div id="userbox" class="userbox">
+          <a href="#" data-toggle="dropdown">
+            <figure class="profile-picture">
+              <img src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/img/!logged-user.jpg" alt="{% firstof user.get_short_name user.get_username %}" class="rounded-circle" data-lock-picture="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/img/!logged-user.jpg" />
+            </figure>
+            <div class="profile-info" data-lock-name="{% firstof user.get_short_name user.get_username %}" data-lock-email="john@doe.com">
+              <span class="name">{% firstof user.get_short_name user.get_username %}</span>
+              <span class="role">john@doe.com</span>
+            </div>
+
+            <i class="fa custom-caret"></i>
+          </a>
+          {% block userlinks %}
+          <div class="dropdown-menu">
+            <ul class="list-unstyled mb-2">
+              <li class="divider"></li>
+              <li>
+                <a role="menuitem" tabindex="-1" href="#"><i class="fas fa-user"></i> My Profile</a>
+              </li>
+              {% if user.is_active and user.is_staff %}
+                  {% url 'django-admindocs-docroot' as docsroot %}
+                  {% if docsroot %}
+                      <li>
+                        <a role="menuitem" tabindex="-1" href="{{ docsroot }}"><i class="fas fa-file-alt"></i> {% translate 'Documentation' %}</a>
+                      </li>
+                  {% endif %}
+              {% endif %}
+              {% if user.has_usable_password %}
+                <li>
+                  <a role="menuitem" tabindex="-1" href="{% url 'admin:password_change' %}" data-lock-screen="true"><i class="fas fa-key"></i> {% translate 'Change password' %}</a>
+                </li>
+              {% endif %}
+              <li>
+                <a role="menuitem" tabindex="-1" href="#" data-lock-screen="true"><i class="fas fa-lock"></i> Lock Screen</a>
+              </li>
+              <li>
+                <a role="menuitem" tabindex="-1" href="{% url 'admin:logout' %}"><i class="fas fa-power-off"></i> Logout</a>
+              </li>
+            </ul>
+          </div>
+          {% endblock %}
+        </div>
+      </div>
+      <!-- end: search & user box -->
+      {% endblock %}
+      {% block nav-global %}{% endblock %}
+    </header>
+    <!-- end: header -->
     {% endif %}
 
-    <div class="main shifted" id="main">
-      {% if not is_popup and is_nav_sidebar_enabled %}
-        {% block nav-sidebar %}
-          {% include "admin/nav_sidebar.html" %}
-        {% endblock %}
-      {% endif %}
-      <div class="content">
-        {% block messages %}
-          {% if messages %}
-            <ul class="messagelist">{% for message in messages %}
-              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
-            {% endfor %}</ul>
-          {% endif %}
-        {% endblock messages %}
-        <!-- Content -->
-        <div id="content" class="{% block coltype %}colM{% endblock %}">
-          {% block pretitle %}{% endblock %}
-          {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
-          {% block content %}
-            {% block object-tools %}{% endblock %}
-            {{ content }}
-          {% endblock %}
-          {% block sidebar %}{% endblock %}
-          <br class="clear">
+    <div class="inner-wrapper">
+      <!-- start: sidebar -->
+      <aside id="sidebar-left" class="sidebar-left">
+
+          <div class="sidebar-header">
+              <div class="sidebar-title">
+                  Navigation
+              </div>
+              <div class="sidebar-toggle d-none d-md-block" data-toggle-class="sidebar-left-collapsed" data-target="html" data-fire-event="sidebar-left-toggle">
+                  <i class="fas fa-bars" aria-label="Toggle sidebar"></i>
+              </div>
+          </div>
+
+          <div class="nano">
+              <div class="nano-content">
+                  <nav id="menu" class="nav-main" role="navigation">
+
+                      <ul class="nav nav-main">
+                          <li class="nav-active">
+                              <a class="nav-link" href="{% url 'admin:index' %}">
+                                  <i class="fas fa-home" aria-hidden="true"></i>
+                                  <span>Home</span>
+                              </a>
+                          </li>
+                      </ul>
+                  </nav>
+
+                  <hr class="separator" />
+
+              </div>
+
+              <script>
+                  // Maintain Scroll Position
+                  if (typeof localStorage !== 'undefined') {
+                      if (localStorage.getItem('sidebar-left-position') !== null) {
+                          var initialPosition = localStorage.getItem('sidebar-left-position'),
+                              sidebarLeft = document.querySelector('#sidebar-left .nano-content');
+
+                          sidebarLeft.scrollTop = initialPosition;
+                      }
+                  }
+              </script>
+              
+          </div>
+
+      </aside>
+      <!-- end: sidebar -->
+      <section role="main" class="content-body">
+        <header class="page-header">
+            <h2>{% translate 'Home' %}</h2>
+            
+            <div class="right-wrapper text-right">
+                {% block breadcrumbs %}
+                <ol class="breadcrumbs">
+                    <li>
+                        <a href="{% url 'admin:index' %}">
+                            <i class="fas fa-home"></i>
+                        </a>
+                    </li>
+                    <li><span>{% translate 'Home' %}</span></li>
+                    <li>{% if title %} &rsaquo; {{ title }}{% endif %}</li>
+                </ol>
+                {% endblock %}
+                {% comment %} <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fas fa-chevron-left"></i></a> {% endcomment %}
+            </div>
+        </header>
+
+        <!-- start: page -->
+        <div class="row">
+            <div class="col-lg-6 mb-3">
+                <div class="row mb-3">
+                    <div class="col-xl-12">
+                      <div class="main shifted" id="main">
+                        {% if not is_popup and is_nav_sidebar_enabled %}
+                          {% block nav-sidebar %}
+                            {% include "admin/nav_sidebar.html" %}
+                          {% endblock %}
+                        {% endif %}
+                        <div class="content">
+                          {% block messages %}
+                            {% if messages %}
+                              <ul class="messagelist">{% for message in messages %}
+                                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+                              {% endfor %}</ul>
+                            {% endif %}
+                          {% endblock messages %}
+                          <!-- Content -->
+                          <div id="content" class="{% block coltype %}colM{% endblock %}">
+                            {% block pretitle %}{% endblock %}
+                            {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+                            {% block content %}
+                              {% block object-tools %}{% endblock %}
+                              {{ content }}
+                            {% endblock %}
+                            {% block sidebar %}{% endblock %}
+                            <br class="clear">
+                          </div>
+                          <!-- END Content -->
+                          {% block footer %}<div id="footer"></div>{% endblock %}
+                        </div>
+                      </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- END Content -->
-        {% block footer %}<div id="footer"></div>{% endblock %}
-      </div>
-    </div>
-</div>
-<!-- END Container -->
+        <!-- end: page -->
+      
+  </section>
+  {% endif %}
+
+  <!-- Vendor -->
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/jquery/jquery.js"></script>
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/jquery-browser-mobile/jquery.browser.mobile.js"></script>
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/popper/umd/popper.min.js"></script>
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/bootstrap/js/bootstrap.js"></script>
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/common/common.js"></script>
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/nanoscroller/nanoscroller.js"></script>
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/magnific-popup/jquery.magnific-popup.js"></script>
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/jquery-placeholder/jquery.placeholder.js"></script>
+
+  <!-- Specific Page Vendor -->
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/jquery-appear/jquery.appear.js"></script>
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/owl.carousel/owl.carousel.js"></script>
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/isotope/isotope.js"></script>
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/select2/js/select2.full.min.js"></script>
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/bootstrap-maxlength/bootstrap-maxlength.js"></script>
+
+  <!-- Theme Base, Components and Settings -->
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/js/theme.js"></script>
+
+  <!-- Theme Custom -->
+  {% comment %} <script src="{% static 'js/admin-custom.js' %}"></script> {% endcomment %}
+
+  <!-- Theme Initialization Files -->
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/js/theme.init.js"></script>
+
+  <!-- Examples -->
+  <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/js/examples/examples.landing.dashboard.js"></script>
+
 </body>
 </html>

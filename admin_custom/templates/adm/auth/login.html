@@ -17,22 +17,9 @@
 
 {% block breadcrumbs %}{% endblock %}
 
-{% block content %}
-{% if form.errors and not form.non_field_errors %}
-<p class="errornote">
-{% if form.errors.items|length == 1 %}{% translate "Please correct the error below." %}{% else %}{% translate "Please correct the errors below." %}{% endif %}
-</p>
-{% endif %}
+{% block content %}{% endblock %}
 
-{% if form.non_field_errors %}
-{% for error in form.non_field_errors %}
-<p class="errornote">
-    {{ error }}
-</p>
-{% endfor %}
-{% endif %}
-
-<div id="content-main">
+{% block auth %}
 
 {% if user.is_authenticated %}
 <p class="errornote">
@@ -43,26 +30,102 @@
 </p>
 {% endif %}
 
-<form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
-  <div class="form-row">
-    {{ form.username.errors }}
-    {{ form.username.label_tag }} {{ form.username }}
-  </div>
-  <div class="form-row">
-    {{ form.password.errors }}
-    {{ form.password.label_tag }} {{ form.password }}
-    <input type="hidden" name="next" value="{{ next }}">
-  </div>
-  {% url 'admin_password_reset' as password_reset_url %}
-  {% if password_reset_url %}
-  <div class="password-reset-link">
-    <a href="{{ password_reset_url }}">{% translate 'Forgotten your password or username?' %}</a>
-  </div>
-  {% endif %}
-  <div class="submit-row">
-    <input type="submit" value="{% translate 'Log in' %}">
-  </div>
-</form>
 
-</div>
+<!-- start: page -->
+  <section class="body-sign">
+    <div class="center-sign">
+      <a href="/" class="logo float-left">
+        <img src="https://assets.alagas.net/logo/logo.png" width="150" height="73" alt="Alagas User Control Panel" />
+      </a>
+
+      <div class="panel card-sign">
+        <div class="card-title-sign mt-3 text-right">
+          <h2 class="title text-uppercase font-weight-bold m-0"><i class="fas fa-user mr-1"></i> Sign In</h2>
+        </div>
+        <div class="card-body">
+      
+          <form action="{{ app_path }}" method="post">
+            {% csrf_token %}
+
+            {% if form.errors and not form.non_field_errors %}
+            <p class="errornote">
+            {% if form.errors.items|length == 1 %}{% translate "Please correct the error below." %}{% else %}{% translate "Please correct the errors below." %}{% endif %}
+            </p>
+            {% endif %}
+
+            {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+            <p class="errornote">
+                {{ error }}
+            </p>
+            {% endfor %}
+            {% endif %}
+
+            <div class="form-row mb-3">
+              {{ form.username.errors }}
+              {{ form.username.label_tag }} {{ form.username }}
+            </div>
+            <div class="form-row mb-3">
+              {{ form.password.errors }}
+              {{ form.password.label_tag }} {{ form.password }}
+              <input type="hidden" name="next" value="{{ next }}">
+            </div>
+            
+            {% comment %} <div class="form-group mb-3">
+              <label>Username</label>
+              <div class="input-group">
+                <input name="username" type="text" class="form-control form-control-lg" />
+                <span class="input-group-append">
+                  <span class="input-group-text">
+                    <i class="fas fa-user"></i>
+                  </span>
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <div class="clearfix">
+                <label class="float-left">Password</label>
+                <a href="pages-recover-password.html" class="float-right">Lost Password?</a>
+              </div>
+              <div class="input-group">
+                <input name="pwd" type="password" class="form-control form-control-lg" />
+                <span class="input-group-append">
+                  <span class="input-group-text">
+                    <i class="fas fa-lock"></i>
+                  </span>
+                </span>
+              </div>
+            </div> {% endcomment %}
+
+            <div class="row">
+              <div class="col-sm-8">
+                <div class="checkbox-custom checkbox-default">
+                  <input id="RememberMe" name="rememberme" type="checkbox"/>
+                  <label for="RememberMe">Remember Me</label>
+                </div>
+              </div>
+              <div class="col-sm-4 text-right">
+                <button type="submit" class="btn btn-primary mt-2">Sign In</button>
+              </div>
+            </div>
+
+            {% url 'admin_password_reset' as password_reset_url %}
+            {% if password_reset_url %}
+            <div class="password-reset-link">
+              <a href="{{ password_reset_url }}">{% translate 'Forgotten your password or username?' %}</a>
+            </div>
+            {% endif %}
+
+            {% comment %} <p class="text-center">Don't have an account yet? <a href="pages-signup.html">Sign Up!</a></p> {% endcomment %}
+
+          </form>
+        </div>
+      </div>
+
+      <p class="text-center text-muted mt-3 mb-3">&copy; Copyright 2017. All Rights Reserved.</p>
+    </div>
+  </section>
+  <!-- end: page -->
+
 {% endblock %}
