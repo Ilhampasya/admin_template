@@ -111,7 +111,7 @@
               {% endif %}
               {% if user.has_usable_password %}
                 <li>
-                  <a role="menuitem" tabindex="-1" href="{% url 'admin:password_change' %}" data-lock-screen="true"><i class="fas fa-key"></i> {% translate 'Change password' %}</a>
+                  <a role="menuitem" tabindex="-1" href="{% url 'admin:password_change' %}"><i class="fas fa-key"></i> {% translate 'Change password' %}</a>
                 </li>
               {% endif %}
               <li>
