@@ -1,21 +1,21 @@
 {% load i18n static %}<!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
-<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %} class="fixed sidebar-left-collapsed">
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %} class="fixed">
 <head>
 <meta charset="UTF-8">
 <title>{% block title %}{% endblock %}</title>
 <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
 {% if not is_popup and is_nav_sidebar_enabled %}
-  {% comment %} <link rel="stylesheet" type="text/css" href="{% static "admin/css/nav_sidebar.css" %}">
-  <script src="{% static 'admin/js/nav_sidebar.js' %}" defer></script> {% endcomment %}
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/nav_sidebar.css" %}">
+<script src="{% static 'admin/js/nav_sidebar.js' %}" defer></script>
 {% endif %}
 {% block extrastyle %}{% endblock %}
-{% comment %} {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %} {% endcomment %}
+{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
 {% block extrahead %}{% endblock %}
 {% block responsive %}
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    {% comment %} <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}">
-    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %} {% endcomment %}
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}">
+    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
 {% endblock %}
 {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
 
@@ -45,7 +45,7 @@
 <link rel="stylesheet" href="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/css/skins/default.css" />
 
 <!-- Theme Custom CSS -->
-{% comment %} <link rel="stylesheet" href="{% static 'css/admin-custom.css' %}" /> {% endcomment %}
+<link rel="stylesheet" href="https://assets.alagas.net/css/admin-custom.css" />
 
 <!-- Head Libs -->
 <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/modernizr/modernizr.js"></script>
@@ -126,7 +126,7 @@
       </div>
       <!-- end: search & user box -->
       {% endblock %}
-      {% block nav-global %}{% endblock %}
+      {% comment %} {% block nav-global %}{% endblock %} {% endcomment %}
     </header>
     <!-- end: header -->
     {% endif %}
@@ -149,12 +149,67 @@
                   <nav id="menu" class="nav-main" role="navigation">
 
                       <ul class="nav nav-main">
-                          <li class="nav-active">
-                              <a class="nav-link" href="{% url 'admin:index' %}">
-                                  <i class="fas fa-home" aria-hidden="true"></i>
-                                  <span>Home</span>
+                        <li class="nav-active">
+                            <a class="nav-link" href="{% url 'admin:index' %}">
+                                <i class="fas fa-home" aria-hidden="true"></i>
+                                <span>Home</span>
+                            </a>
+                        </li>
+                        {% if app_list %}
+                          {% for app in app_list %}
+                            <li class="nav-parent">
+                              <a class="nav-link" href="#">
+                                  <i class="fas fa-user-cog" aria-hidden="true"></i>
+                                  <span>{{ app.app_label|capfirst }}</span>
                               </a>
-                          </li>
+                              <ul class="nav nav-children custom-nav">
+                                {% for model in app.models %}
+                                  <li>
+                                      <span>{{ model.name }} </span> 
+                                      {% if model.add_url %}
+                                        <a href="{{ model.add_url }}"><i class="far fa-plus-square"></i><span>{% translate 'Add' %}</span></a>
+                                      {% endif %}
+                                      {% if model.admin_url and show_changelinks %}
+                                        {% if model.view_only %}
+                                          <a href="{{ model.admin_url }}"><i class="far fa-eye"></i><span>{% translate 'View' %}</span></a>
+                                        {% else %}
+                                          <a href="{{ model.admin_url }}"><i class="far fa-edit"></i><span>{% translate 'Change' %}</span></a>
+                                        {% endif %}
+                                      {% elif show_changelinks %}
+                                        
+                                      {% endif %}
+                                  </li>
+                                {% endfor %}
+                              </ul>
+                            </li>
+                            
+                          {% endfor %}
+                        {% endif %}
+                        <!-- <li class="nav-parent">
+                          <a class="nav-link" href="#">
+                              <i class="fas fa-user-cog" aria-hidden="true"></i>
+                              <span>Auth</span>
+                          </a>
+                          <ul class="nav nav-children custom-nav">
+                            <li>
+                                <span>Groups </span> <a href="#"><i class="far fa-plus-square"></i><span>add</span></a> <a href="#"><i class="far fa-edit"></i><span>edit</span></a>
+                            </li>
+                            <li>
+                                <span>Users </span> <a href="#"><i class="far fa-plus-square"></i><span>add</span></a> <a href="#"><i class="far fa-edit"></i><span>edit</span></a>
+                            </li>
+                          </ul>
+                        </li>
+                        <li class="nav-parent">
+                          <a class="nav-link" href="#">
+                              <i class="far fa-clone" aria-hidden="true"></i>
+                              <span>Blog</span>
+                          </a>
+                          <ul class="nav nav-children custom-nav">
+                            <li>
+                                <span>Posts </span> <a href="#"><i class="far fa-plus-square"></i><span>add</span></a> <a href="#"><i class="far fa-edit"></i><span>edit</span></a>
+                            </li>
+                          </ul>
+                        </li> -->
                       </ul>
                   </nav>
 
@@ -180,7 +235,7 @@
       <!-- end: sidebar -->
       <section role="main" class="content-body">
         <header class="page-header">
-            <h2>{% translate 'Home' %}</h2>
+            <h2>{% block page_header %}{% translate 'Home' %}{% endblock %}</h2>
             
             <div class="right-wrapper text-right">
                 {% block breadcrumbs %}
@@ -194,21 +249,21 @@
                     <li>{% if title %} &rsaquo; {{ title }}{% endif %}</li>
                 </ol>
                 {% endblock %}
-                {% comment %} <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fas fa-chevron-left"></i></a> {% endcomment %}
+                <a class="sidebar-right-toggle invisible"><i class="fas fa-chevron-left"></i></a>
             </div>
         </header>
 
         <!-- start: page -->
         <div class="row">
-            <div class="col-lg-6 mb-3">
+            <div class="col-lg-12 mb-3">
                 <div class="row mb-3">
                     <div class="col-xl-12">
                       <div class="main shifted" id="main">
-                        {% if not is_popup and is_nav_sidebar_enabled %}
+                        {% comment %} {% if not is_popup and is_nav_sidebar_enabled %}
                           {% block nav-sidebar %}
                             {% include "admin/nav_sidebar.html" %}
                           {% endblock %}
-                        {% endif %}
+                        {% endif %} {% endcomment %}
                         <div class="content">
                           {% block messages %}
                             {% if messages %}
