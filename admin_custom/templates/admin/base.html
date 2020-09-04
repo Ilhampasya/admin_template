@@ -58,9 +58,10 @@
 
   {% block auth %}{% endblock %}
 
-  {% if has_permission %}
+  
   <section class="body">
 
+    {% if has_permission %}
     {% if not is_popup %}
     <!-- start: header -->
     <header class="header">
@@ -130,8 +131,10 @@
     </header>
     <!-- end: header -->
     {% endif %}
+    {% endif %}
 
     <div class="inner-wrapper">
+      {% if has_permission %}
       <!-- start: sidebar -->
       <aside id="sidebar-left" class="sidebar-left">
 
@@ -233,7 +236,9 @@
 
       </aside>
       <!-- end: sidebar -->
+      {% endif %}
       <section role="main" class="content-body">
+        {% if has_permission %}
         <header class="page-header">
             <h2>{% block page_header %}{% translate 'Home' %}{% endblock %}</h2>
             
@@ -252,6 +257,7 @@
                 <a class="sidebar-right-toggle invisible"><i class="fas fa-chevron-left"></i></a>
             </div>
         </header>
+        {% endif %}
 
         <!-- start: page -->
         <div class="row">
@@ -295,7 +301,6 @@
         <!-- end: page -->
       
   </section>
-  {% endif %}
 
   <!-- Vendor -->
   <script src="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/jquery/jquery.js"></script>
