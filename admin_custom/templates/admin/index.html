@@ -32,9 +32,9 @@
                     {% for entry in admin_log %}
                         <tr>
                             <td>
-                                {% if entry.is_addition %}<i class="el el-plus"></i> Add{% endif %}
-                                {% if entry.is_change %}<i class="el el-edit"></i> Change{% endif %}
-                                {% if entry.is_deletion %}<i class="el el-trash"></i> Delete{% endif %}
+                                {% if entry.is_addition %}<i class="fas fa-plus"></i> Add{% endif %}
+                                {% if entry.is_change %}<i class="far fa-edit"></i> Change{% endif %}
+                                {% if entry.is_deletion %}<i class="fas fa-trash-alt"></i> Delete{% endif %}
                             </td>
                             <td>
                             {% if entry.is_deletion or not entry.get_admin_url %}

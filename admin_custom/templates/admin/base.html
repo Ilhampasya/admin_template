@@ -170,16 +170,14 @@
                                   <li>
                                       <span>{{ model.name }} </span> 
                                       {% if model.add_url %}
-                                        <a href="{{ model.add_url }}"><i class="el el-plus"></i><span>{% translate 'Add' %}</span></a>
+                                        <a href="{{ model.add_url }}"><i class="fas fa-plus"></i><span>{% translate 'Add' %}</span></a>
                                       {% endif %}
                                       {% if model.admin_url %}
                                         {% if model.view_only %}
                                           <a href="{{ model.admin_url }}"><i class="far fa-eye"></i><span>{% translate 'View' %}</span></a>
                                         {% else %}
-                                          <a href="{{ model.admin_url }}"><i class="el el-edit"></i><span>{% translate 'Change' %}</span></a>
+                                          <a href="{{ model.admin_url }}"><i class="far fa-edit"></i><span>{% translate 'Change' %}</span></a>
                                         {% endif %}
-                                      {% elif show_changelinks %}
-                                        
                                       {% endif %}
                                   </li>
                                 {% endfor %}
