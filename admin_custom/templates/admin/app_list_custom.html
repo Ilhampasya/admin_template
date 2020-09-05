@@ -1,0 +1,34 @@
+{% load i18n %}
+
+{% if app_list %}
+  {% for app in app_list %}
+  <div class="pricing-table pricing-table-sm app-list-custom row no-gutters mt-3 mb-3">
+    {% for model in app.models %}
+      <div class="col-lg-2">
+        <div class="plan most-popular">
+          <h3>
+            {% if model.admin_url %}
+              <a href="{{ model.admin_url }}"{% if model.admin_url in request.path %} aria-current="page"{% endif %}>{{ model.name }}</a>
+            {% else %}
+              {{ model.name }}
+            {% endif %}
+          </h3>
+          {% if model.add_url %}
+            <a class="btn btn-primary" href="{{ model.add_url }}"><i class="fas fa-plus"></i> <span>{% translate 'Add' %}</span></a>
+          {% endif %}
+
+          {% if model.admin_url %}
+            {% if model.view_only %}
+              <a class="btn btn-primary" href="{{ model.admin_url }}"><i class="far fa-edit"></i> <span>{% translate 'View' %}</span></a>
+            {% else %}
+              <a class="btn btn-primary" href="{{ model.admin_url }}"><i class="far fa-edit"></i> <span>{% translate 'Change' %}</span></a>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+{% else %}
+  <p>{% translate 'You don’t have permission to view or edit anything.' %}</p>
+{% endif %}
