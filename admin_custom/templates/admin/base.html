@@ -162,7 +162,11 @@
                           {% for app in app_list %}
                             <li class="nav-parent">
                               <a class="nav-link" href="#">
-                                  <i class="fas fa-user-cog" aria-hidden="true"></i>
+                                  {% if app.app_label == 'blog' %}
+                                    <i class="fas fa-pen"></i>
+                                  {% else %}
+                                    <i class="fas fa-user-cog"></i>
+                                  {% endif %}
                                   <span>{{ app.app_label|capfirst }}</span>
                               </a>
                               <ul class="nav nav-children custom-nav">
