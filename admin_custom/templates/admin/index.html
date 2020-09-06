@@ -3,7 +3,7 @@
 
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}">{% endblock %}
 
-{% block coltype %}colMS{% endblock %}
+{% block coltype %}{% endblock %}
 
 {% block bodyclass %}{{ block.super }} dashboard{% endblock %}
 
@@ -12,39 +12,83 @@
 {% block nav-sidebar %}{% endblock %}
 
 {% block content %}
-<div id="content-main">
+{% comment %} <div id="content-main">
   {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
-</div>
-{% endblock %}
-
-{% block sidebar %}
-<div id="content-related">
-    <div class="module" id="recent-actions-module">
-        <h2>{% translate 'Recent actions' %}</h2>
-        <h3>{% translate 'My actions' %}</h3>
-            {% load log %}
-            {% get_admin_log 10 as admin_log for_user user %}
-            {% if not admin_log %}
-            <p>{% translate 'None available' %}</p>
-            {% else %}
-            <ul class="actionlist">
-            {% for entry in admin_log %}
-            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
-                {% if entry.is_deletion or not entry.get_admin_url %}
-                    {{ entry.object_repr }}
+</div> {% endcomment %}
+<div class="row">
+    <div class="col-12">
+        <section class="card mb-4 index-recent-action">
+            <header class="card-header">
+                <h2 class="card-title">{% translate 'Recent actions' %}</h2>
+            </header>
+            <div class="card-body">
+                {% load log %}
+                {% get_admin_log 10 as admin_log for_user user %}
+                {% if not admin_log %}
+                <p>{% translate 'None available' %}</p>
                 {% else %}
-                    <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                <table class="table table-responsive-md table-striped mb-0">
+                    <tbody>
+                    {% for entry in admin_log %}
+                        <tr>
+                            <td>
+                                {% if entry.is_addition %}<i class="fas fa-plus"></i> Add{% endif %}
+                                {% if entry.is_change %}<i class="far fa-edit"></i> Change{% endif %}
+                                {% if entry.is_deletion %}<i class="fas fa-trash-alt"></i> Delete{% endif %}
+                            </td>
+                            <td>
+                            {% if entry.is_deletion or not entry.get_admin_url %}
+                                {{ entry.object_repr }}
+                            {% else %}
+                                <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                            {% endif %}
+                            </td>
+                            <td>
+                            {% if entry.content_type %}
+                                <span class="mini quiet">{% filter capfirst %}{{ entry.content_type.name }}{% endfilter %}</span>
+                            {% else %}
+                                <span class="mini quiet">{% translate 'Unknown content' %}</span>
+                            {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
                 {% endif %}
-                <br>
-                {% if entry.content_type %}
-                    <span class="mini quiet">{% filter capfirst %}{{ entry.content_type.name }}{% endfilter %}</span>
+                
+                        
+                    
+                {% comment %} <p>{% translate 'My actions' %}</p>
+                {% load log %}
+                {% get_admin_log 10 as admin_log for_user user %}
+                {% if not admin_log %}
+                <p>{% translate 'None available' %}</p>
                 {% else %}
-                    <span class="mini quiet">{% translate 'Unknown content' %}</span>
-                {% endif %}
-            </li>
-            {% endfor %}
-            </ul>
-            {% endif %}
+                <ul class="actionlist">
+                {% for entry in admin_log %}
+                <li>
+                    {% if entry.is_addition %}<i class="el el-plus"></i>{% endif %}
+                    {% if entry.is_change %}<i class="el el-edit"></i>{% endif %}
+                    {% if entry.is_deletion %}deletelink{% endif %}
+                    {% if entry.is_deletion or not entry.get_admin_url %}
+                        {{ entry.object_repr }}
+                    {% else %}
+                        <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                    {% endif %}
+                    <br>
+                    {% if entry.content_type %}
+                        <span class="mini quiet">{% filter capfirst %}{{ entry.content_type.name }}{% endfilter %}</span>
+                    {% else %}
+                        <span class="mini quiet">{% translate 'Unknown content' %}</span>
+                    {% endif %}
+                </li>
+                {% endfor %}
+                </ul>
+                {% endif %} {% endcomment %}
+            </div>
+        </section>
     </div>
 </div>
 {% endblock %}
+
+{% block sidebar %}{% endblock %}

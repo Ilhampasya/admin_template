@@ -29,6 +29,7 @@
 <link rel="stylesheet" href="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/animate/animate.css">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/elusive-icons/css/elusive-icons.css" />
 <link rel="stylesheet" href="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/magnific-popup/magnific-popup.css" />
 <link rel="stylesheet" href="https://frameworkp4eopvrjdtcuoj2.alagas.net/admin/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css" />
 
@@ -53,7 +54,7 @@
 </head>
 {% load i18n %}
 
-<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
+<body class="admin-custom {% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
   data-admin-utc-offset="{% now "Z" %}">
 
   {% block auth %}{% endblock %}
@@ -161,7 +162,11 @@
                           {% for app in app_lists %}
                             <li class="nav-parent">
                               <a class="nav-link" href="#">
-                                  <i class="fas fa-user-cog" aria-hidden="true"></i>
+                                  {% if app.app_label == 'blog' %}
+                                    <i class="fas fa-pen"></i>
+                                  {% else %}
+                                    <i class="fas fa-user-cog"></i>
+                                  {% endif %}
                                   <span>{{ app.app_label|capfirst }}</span>
                               </a>
                               <ul class="nav nav-children custom-nav">
@@ -169,16 +174,14 @@
                                   <li>
                                       <span>{{ model.name }} </span> 
                                       {% if model.add_url %}
-                                        <a href="{{ model.add_url }}"><i class="far fa-plus-square"></i><span>{% translate 'Add' %}</span></a>
+                                        <a href="{{ model.add_url }}"><i class="fas fa-plus"></i><span>{% translate 'Add' %}</span></a>
                                       {% endif %}
-                                      {% if model.admin_url and show_changelinks %}
+                                      {% if model.admin_url %}
                                         {% if model.view_only %}
                                           <a href="{{ model.admin_url }}"><i class="far fa-eye"></i><span>{% translate 'View' %}</span></a>
                                         {% else %}
                                           <a href="{{ model.admin_url }}"><i class="far fa-edit"></i><span>{% translate 'Change' %}</span></a>
                                         {% endif %}
-                                      {% elif show_changelinks %}
-                                        
                                       {% endif %}
                                   </li>
                                 {% endfor %}
@@ -279,7 +282,8 @@
                           <!-- Content -->
                           <div id="content" class="{% block coltype %}colM{% endblock %}">
                             {% block pretitle %}{% endblock %}
-                            {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+                            {% comment %} {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %} {% endcomment %}
+                            {% block content_title %}{% endblock %}
                             {% block content %}
                               {% block object-tools %}{% endblock %}
                               {{ content }}
