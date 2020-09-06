@@ -158,8 +158,8 @@
                                 <span>{% translate 'Home' %}</span>
                             </a>
                         </li>
-                        {% if app_lists %}
-                          {% for app in app_lists %}
+                        {% if apps %}
+                          {% for app in apps %}
                             <li class="nav-parent">
                               <a class="nav-link" href="#">
                                   {% if app.app_label == 'blog' %}
