@@ -2,9 +2,9 @@
 
 {% if app_list %}
   {% for app in app_list %}
-  <div class="pricing-table pricing-table-sm app-list-custom row no-gutters mt-3 mb-3">
+  <div class="pricing-table pricing-table-sm app-list-custom row mt-3 mb-3">
     {% for model in app.models %}
-      <div class="col-lg-2">
+      <div class="col col-lg-4">
         <div class="plan most-popular">
           <h3>
             {% if model.admin_url %}
