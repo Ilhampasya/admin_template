@@ -166,8 +166,10 @@
                               <a class="nav-link" href="#">
                                   {% if app.app_label == 'blog' %}
                                     <i class="fas fa-pen"></i>
-                                  {% else %}
+                                  {% elif app.app_label == 'auth' %}
                                     <i class="fas fa-user-cog"></i>
+                                  {% else %}
+                                    <i class="fas fa-cog"></i>
                                   {% endif %}
                                   <span>{{ app.app_label|capfirst }}</span>
                               </a>
