@@ -2,7 +2,17 @@
 {% block object-tools-items %}
 <li>
     {% url opts|admin_urlname:'history' original.pk|admin_urlquote as history_url %}
-    <a href="{% add_preserved_filters history_url %}" class="historylink">{% translate "History" %}</a>
+    {% comment %} <a href="{% add_preserved_filters history_url %}" class="historylink">{% translate "History" %}</a> {% endcomment %}
+    <a href="{% add_preserved_filters history_url %}" class="btn btn-primary">
+      <span>{% translate "History" %}</span> <i class="fas fa-history"></i>
+    </a>
 </li>
-{% if has_absolute_url %}<li><a href="{{ absolute_url }}" class="viewsitelink">{% translate "View on site" %}</a></li>{% endif %}
+{% if has_absolute_url %}
+{% comment %} <li><a href="{{ absolute_url }}" class="viewsitelink">{% translate "View on site" %}</a></li> {% endcomment %}
+<li>
+    <a href="{{ absolute_url }}" class="btn btn-primary">
+        <span>{% translate "View on site" %}</span> <i class="far fa-eye"></i>
+    </a>
+</li>
+{% endif %}
 {% endblock %}
